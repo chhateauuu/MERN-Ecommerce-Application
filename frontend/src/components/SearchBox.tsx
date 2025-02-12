@@ -1,3 +1,4 @@
+// SearchBox.tsx
 import React, { useState } from 'react'
 import { Button, Form, FormControl, InputGroup } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
@@ -17,12 +18,13 @@ export default function SearchBox() {
           type="text"
           name="q"
           id="q"
-          placeholder="Search Amazona"
-          aria-label="Search Amazona"
+          placeholder="Search products..."
+          aria-label="Search products"
           aria-describedby="button-search"
           onChange={(e) => setQuery(e.target.value)}
+          className="modern-search"
         ></FormControl>
-        <Button variant="outline-primary" type="submit" id="button-search">
+        <Button variant="outline-light" type="submit" id="button-search">
           <i className="fas fa-search"></i>
         </Button>
       </InputGroup>

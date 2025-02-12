@@ -21,5 +21,8 @@
   "homepage": "https://github.com/basir/ts-mern-amazona#readme",
   "devDependencies": {
     "concurrently": "^8.0.1"
+  },
+  "dependencies": {
+    "mongodb": "^6.12.0"
   }
 }

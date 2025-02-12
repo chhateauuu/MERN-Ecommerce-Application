@@ -22,12 +22,6 @@ export default function SignupPage() {
   const { state, dispatch } = useContext(Store)
   const { userInfo } = state
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate(redirect)
-    }
-  }, [navigate, redirect, userInfo])
-
   const { mutateAsync: signup, isLoading } = useSignupMutation()
 
   const submitHandler = async (e: React.SyntheticEvent) => {
@@ -50,54 +44,105 @@ export default function SignupPage() {
     }
   }
 
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect)
+    }
+  }, [navigate, redirect, userInfo])
+
   return (
     <Container className="small-container">
       <Helmet>
         <title>Sign Up</title>
       </Helmet>
-      <h1 className="my-3">Sign Up</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control onChange={(e) => setName(e.target.value)} required />
-        </Form.Group>
+      <div className="auth-wrapper">
+        <div className="auth-card">
+          <h1 className="auth-title">Create Account</h1>
+          <Form onSubmit={submitHandler} className="auth-form">
+            <Form.Group className="mb-3" controlId="name">
+              <Form.Label>Name</Form.Label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fas fa-user"></i>
+                </span>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your name"
+                  required
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fas fa-envelope"></i>
+                </span>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fas fa-lock"></i>
+                </span>
+                <Form.Control
+                  type="password"
+                  placeholder="Enter your password"
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </Form.Group>
 
-        <Form.Group className="mb-3" controlId="confirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </Form.Group>
+            <Form.Group className="mb-3" controlId="confirmPassword">
+              <Form.Label>Confirm Password</Form.Label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fas fa-lock"></i>
+                </span>
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm your password"
+                  required
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            </Form.Group>
 
-        <div className="mb-3">
-          <Button type="submit">Sign Up</Button>
+            <div className="mb-3">
+              <Button disabled={isLoading} type="submit" className="auth-button">
+                {isLoading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2"></span>
+                    Creating Account...
+                  </>
+                ) : (
+                  'Create Account'
+                )}
+              </Button>
+            </div>
+
+            <div className="auth-footer">
+              <p>
+                Already have an account?{' '}
+                <Link to={`/signin?redirect=${redirect}`} className="auth-link">
+                  Sign In
+                </Link>
+              </p>
+            </div>
+          </Form>
         </div>
-
-        <div className="mb-3">
-          Already have an account?{' '}
-          <Link to={`/signin?redirect=${redirect}`}>Sign In</Link>
-        </div>
-      </Form>
+      </div>
     </Container>
   )
 }

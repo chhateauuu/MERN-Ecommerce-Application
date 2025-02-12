@@ -49,35 +49,64 @@ export default function SigninPage() {
       <Helmet>
         <title>Sign In</title>
       </Helmet>
-      <h1 className="my-3">Sign In</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <div className="mb-3">
-          <Button disabled={isLoading} type="submit">
-            Sign In
-          </Button>
-          {isLoading && <LoadingBox />}
+      <div className="auth-wrapper">
+        <div className="auth-card">
+          <h1 className="auth-title">Sign In</h1>
+          <Form onSubmit={submitHandler} className="auth-form">
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fas fa-envelope"></i>
+                </span>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <div className="input-group">
+                <span className="input-group-text">
+                  <i className="fas fa-lock"></i>
+                </span>
+                <Form.Control
+                  type="password"
+                  placeholder="Enter your password"
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </Form.Group>
+
+            <div className="mb-3">
+              <Button disabled={isLoading} type="submit" className="auth-button">
+                {isLoading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2"></span>
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            </div>
+
+            <div className="auth-footer">
+              <p>
+                New customer?{' '}
+                <Link to={`/signup?redirect=${redirect}`} className="auth-link">
+                  Create your account
+                </Link>
+              </p>
+            </div>
+          </Form>
         </div>
-        <div className="mb-3">
-          New customer?{' '}
-          <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
-        </div>
-      </Form>
+      </div>
     </Container>
   )
 }

@@ -13,21 +13,27 @@ dotenv.config()
 
 const MONGODB_URI =
   process.env.MONGODB_URI || 'mongodb://localhost/tsmernamazonadb'
-mongoose.set('strictQuery', true)
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log('connected to mongodb')
-  })
-  .catch(() => {
-    console.log('error mongodb')
-  })
+  mongoose.set('strictQuery', true)
+  mongoose
+    .connect(process.env.MONGODB_URI!)
+    .then(() => {
+      console.log('Connected to MongoDB')
+    })
+    .catch((error) => {
+      console.error('Error connecting to MongoDB:', error.message)
+    })
+    mongoose.connection.on('error', (err) => {
+      console.error('MongoDB connection error:', err.message)
+    })
+    mongoose.connection.on('disconnected', () => {
+      console.log('MongoDB disconnected')
+    })
 
 const app = express()
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'http://localhost:3000'],
   })
 )
 

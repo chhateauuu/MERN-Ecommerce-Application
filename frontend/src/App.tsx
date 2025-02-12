@@ -3,10 +3,6 @@ import {
   Badge,
   Button,
   Container,
-  Form,
-  FormControl,
-  InputGroup,
-  ListGroup,
   Nav,
   Navbar,
   NavDropdown,
@@ -22,6 +18,7 @@ import MessageBox from './components/MessageBox'
 import { getError } from './utils'
 import { ApiError } from './types/ApiError'
 import SearchBox from './components/SearchBox'
+import './styles/custom.css' // Import the new styles
 
 function App() {
   const {
@@ -36,6 +33,7 @@ function App() {
   const switchModeHandler = () => {
     dispatch({ type: 'SWITCH_MODE' })
   }
+
   const signoutHandler = () => {
     dispatch({ type: 'USER_SIGNOUT' })
     localStorage.removeItem('userInfo')
@@ -46,45 +44,44 @@ function App() {
   }
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
-
   const { data: categories, isLoading, error } = useGetCategoriesQuery()
 
   return (
-    <div className="d-flex flex-column vh-100">
+    <div className="d-flex flex-column min-vh-100">
       <ToastContainer position="bottom-center" limit={1} />
       <header>
-        <Navbar
-          className="d-flex flex-column align-items-stretch p-2 pb-0 mb-3"
-          bg="dark"
-          variant="dark"
-          expand="lg"
+      <Navbar expand="lg" className="modern-nav">
+  <Container>
+    <div className="d-flex justify-content-between align-items-center w-100">
+      <LinkContainer to="/">
+        <Navbar.Brand>
+          <span className="brand-text">Aarya's Shop</span>
+        </Navbar.Brand>
+      </LinkContainer>
+
+      <SearchBox />
+
+      <Nav className="align-items-center">
+        <Link
+          to="#"
+          className="nav-link theme-toggle"
+          onClick={switchModeHandler}
         >
-          <div className="d-flex justify-content-between align-items-center">
-            <LinkContainer to="/" className="header-link">
-              <Navbar.Brand>amazona</Navbar.Brand>
-            </LinkContainer>
-            <SearchBox />
+          <i className={mode === 'light' ? 'fas fa-moon' : 'fas fa-sun'}></i>
+        </Link>
 
-            <Navbar.Collapse>
-              <Nav className="w-100 justify-content-end">
-                <Link
-                  to="#"
-                  className="nav-link header-link"
-                  onClick={switchModeHandler}
-                >
-                  <i
-                    className={mode === 'light' ? 'fa fa-sun' : 'fa fa-moon'}
-                  ></i>{' '}
-                  {mode === 'light' ? 'Light' : 'Dark'}
-                </Link>
-
-                {userInfo ? (
-                  <NavDropdown
-                    className="header-link"
-                    title={`Hello, ${userInfo.name}`}
-                  >
+        {userInfo ? (
+          <NavDropdown
+            title={
+              <span className="user-greeting">
+                Hello, {userInfo.name.split(' ')[0]}
+              </span>
+            }
+            id="basic-nav-dropdown"
+            className="custom-dropdown"
+          >
                     <LinkContainer to="/profile">
-                      <NavDropdown.Item>User Profile</NavDropdown.Item>
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>
                     <LinkContainer to="/orderhistory">
                       <NavDropdown.Item>Order History</NavDropdown.Item>
@@ -95,98 +92,79 @@ function App() {
                       to="#signout"
                       onClick={signoutHandler}
                     >
-                      {' '}
-                      Sign Out{' '}
+                      Sign Out
                     </Link>
                   </NavDropdown>
                 ) : (
-                  <NavDropdown className="header-link" title={`Hello, sign in`}>
-                    <LinkContainer to="/signin">
-                      <NavDropdown.Item>Sign In</NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
+                  <Link to="/signin" className="nav-link sign-in-link">
+                    <span className="user-greeting">Hello, Sign In</span>
+                  </Link>
                 )}
-                <Link to="/orderhistory" className="nav-link header-link">
-                  Orders
-                </Link>
-                <Link to="/cart" className="nav-link header-link p-0">
-                  {
-                    <span className="cart-badge">
-                      {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
-                    </span>
-                  }
-                  <svg
-                    fill="#ffffff"
-                    viewBox="130 150 200 300"
-                    width="40px"
-                    height="40px"
-                  >
-                    <path d="M 110.164 188.346 C 104.807 188.346 100.437 192.834 100.437 198.337 C 100.437 203.84 104.807 208.328 110.164 208.328 L 131.746 208.328 L 157.28 313.233 C 159.445 322.131 167.197 328.219 176.126 328.219 L 297.409 328.219 C 306.186 328.219 313.633 322.248 315.951 313.545 L 341.181 218.319 L 320.815 218.319 L 297.409 308.237 L 176.126 308.237 L 150.592 203.332 C 148.426 194.434 140.675 188.346 131.746 188.346 L 110.164 188.346 Z M 285.25 328.219 C 269.254 328.219 256.069 341.762 256.069 358.192 C 256.069 374.623 269.254 388.165 285.25 388.165 C 301.247 388.165 314.431 374.623 314.431 358.192 C 314.431 341.762 301.247 328.219 285.25 328.219 Z M 197.707 328.219 C 181.711 328.219 168.526 341.762 168.526 358.192 C 168.526 374.623 181.711 388.165 197.707 388.165 C 213.704 388.165 226.888 374.623 226.888 358.192 C 226.888 341.762 213.704 328.219 197.707 328.219 Z M 197.707 348.201 C 203.179 348.201 207.434 352.572 207.434 358.192 C 207.434 363.812 203.179 368.183 197.707 368.183 C 192.236 368.183 187.98 363.812 187.98 358.192 C 187.98 352.572 192.236 348.201 197.707 348.201 Z M 285.25 348.201 C 290.722 348.201 294.977 352.572 294.977 358.192 C 294.977 363.812 290.722 368.183 285.25 368.183 C 279.779 368.183 275.523 363.812 275.523 358.192 C 275.523 352.572 279.779 348.201 285.25 348.201 Z" />
-                  </svg>
-                  <span>Cart</span>
+
+                <Link to="/cart" className="nav-link position-relative">
+                  <div className="cart-icon-container">
+                    <i className="fas fa-shopping-cart"></i>
+                    {cart.cartItems.length > 0 && (
+                      <span className="cart-badge">
+                        {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                      </span>
+                    )}
+                  </div>
                 </Link>
               </Nav>
-            </Navbar.Collapse>
-          </div>
-          <div className="sub-header">
-            <div className="d-flex">
-              <Link
-                to="#"
-                className="nav-link header-link p-1"
-                onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
-              >
-                <i className="fas fa-bars"></i> All
-              </Link>
-              {['Todays Deal', 'Gifts', 'On Sale'].map((x) => (
-                <Link
-                  key={x}
-                  className="nav-link header-link p-1 px-3"
-                  to={`/search?tag=${x}`}
-                >
-                  {x}
-                </Link>
-              ))}
             </div>
-          </div>
+          </Container>
         </Navbar>
+
+        <nav className="sub-header">
+          <Container>
+            <div className="d-flex align-items-center">
+              <Button
+                variant="outline-light"
+                onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+                className="categories-btn"
+              >
+                <i className="fas fa-bars"></i> Categories
+              </Button>
+              
+              <Nav className="ms-3">
+                {['New Arrivals', 'Best Sellers', 'Deals'].map((x) => (
+                  <Link
+                    key={x}
+                    className="nav-link text-white"
+                    to={`/search?tag=${x}`}
+                  >
+                    {x}
+                  </Link>
+                ))}
+              </Nav>
+            </div>
+          </Container>
+        </nav>
       </header>
 
       {sidebarIsOpen && (
         <div
-          onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
-          className="side-navbar-backdrop"
+          onClick={() => setSidebarIsOpen(false)}
+          className="sidebar-backdrop"
         ></div>
       )}
 
       <div
-        className={
-          sidebarIsOpen
-            ? 'active-nav side-navbar d-flex justify-content-between flex-wrap flex-column'
-            : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
-        }
+        className={`sidebar ${sidebarIsOpen ? 'active' : ''}`}
       >
-        <ListGroup variant="flush">
-          <ListGroup.Item action className="side-navbar-user">
-            <LinkContainer
-              to={userInfo ? `/profile` : `/signin`}
-              onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
-            >
-              <span>
-                {userInfo ? `Hello, ${userInfo.name}` : `Hello, sign in`}
-              </span>
-            </LinkContainer>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div className="d-flex justify-content-between align-items-center">
-              <strong>Categories</strong>
-              <Button
-                variant={mode}
-                onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
-              >
-                <i className="fa fa-times" />
-              </Button>
-            </div>
-          </ListGroup.Item>
+        <div className="sidebar-header">
+          <h5>Categories</h5>
+          <Button 
+            variant="link" 
+            onClick={() => setSidebarIsOpen(false)}
+            className="close-btn"
+          >
+            <i className="fas fa-times"></i>
+          </Button>
+        </div>
+
+        <div className="sidebar-content">
           {isLoading ? (
             <LoadingBox />
           ) : error ? (
@@ -194,27 +172,34 @@ function App() {
               {getError(error as ApiError)}
             </MessageBox>
           ) : (
-            categories!.map((category) => (
-              <ListGroup.Item action key={category}>
-                <LinkContainer
-                  to={{ pathname: '/search', search: `category=${category}` }}
-                  onClick={() => setSidebarIsOpen(false)}
-                >
-                  <Nav.Link>{category}</Nav.Link>
-                </LinkContainer>
-              </ListGroup.Item>
-            ))
+            <Nav className="flex-column">
+              {categories!.map((category) => (
+                <Nav.Item key={category}>
+                  <LinkContainer
+                    to={{ pathname: '/search', search: `category=${category}` }}
+                    onClick={() => setSidebarIsOpen(false)}
+                  >
+                    <Nav.Link>{category}</Nav.Link>
+                  </LinkContainer>
+                </Nav.Item>
+              ))}
+            </Nav>
           )}
-        </ListGroup>
+        </div>
       </div>
 
-      <main>
-        <Container className="mt-3">
+      <main className="flex-grow-1">
+        <Container className="mt-4">
           <Outlet />
         </Container>
       </main>
-      <footer>
-        <div className="text-center">All rights reserved</div>
+
+      <footer className="footer mt-auto">
+        <Container>
+          <div className="py-3 text-center">
+            <p className="mb-0">© 2025 Aarya's Shop. All rights reserved.</p>
+          </div>
+        </Container>
       </footer>
     </div>
   )

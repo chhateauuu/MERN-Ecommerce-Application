@@ -22,7 +22,6 @@ export default function ProductPage() {
 
   const { state, dispatch } = useContext(Store)
   const { cart } = state
-
   const navigate = useNavigate()
 
   const addToCartHandler = () => {
@@ -36,9 +35,10 @@ export default function ProductPage() {
       type: 'CART_ADD_ITEM',
       payload: { ...convertProductToCartItem(product!), quantity },
     })
-    toast.success('Product added to the cart')
+    toast.success('Product added to cart')
     navigate('/cart')
   }
+
   return isLoading ? (
     <LoadingBox />
   ) : error ? (
@@ -46,66 +46,73 @@ export default function ProductPage() {
   ) : !product ? (
     <MessageBox variant="danger">Product Not Found</MessageBox>
   ) : (
-    <div>
+    <div className="product-details-page">
       <Row>
-        <Col md={6}>
-          <img className="large" src={product.image} alt={product.name}></img>
+        <Col md={6} className="product-image-section">
+          <div className="product-main-image">
+            <img
+              className="large"
+              src={product.image}
+              alt={product.name}
+            />
+          </div>
         </Col>
-        <Col md={3}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <Helmet>
-                <title>{product.name}</title>
-              </Helmet>
-              <h1>{product.name}</h1>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Rating
+
+        <Col md={6} className="product-info-section">
+          <div className="product-info-content">
+            <Helmet>
+              <title>{product.name}</title>
+            </Helmet>
+
+            <h1 className="product-title">{product.name}</h1>
+
+            <div className="product-meta">
+              <Rating 
                 rating={product.rating}
                 numReviews={product.numReviews}
-              ></Rating>
-            </ListGroup.Item>
-            <ListGroup.Item>Price : ${product.price}</ListGroup.Item>
-            <ListGroup.Item>
-              Description:
+              />
+              <span className="product-brand">
+                Brand: {product.brand}
+              </span>
+            </div>
+
+            <div className="product-description">
+              <h2>About this item</h2>
               <p>{product.description}</p>
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={3}>
-          <Card>
-            <Card.Body>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Price:</Col>
-                    <Col>${product.price}</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Status:</Col>
-                    <Col>
-                      {product.countInStock > 0 ? (
-                        <Badge bg="success">In Stock</Badge>
-                      ) : (
-                        <Badge bg="danger">Unavailable</Badge>
-                      )}
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-                {product.countInStock > 0 && (
-                  <ListGroup.Item>
-                    <div className="d-grid">
-                      <Button onClick={addToCartHandler} variant="primary">
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </ListGroup.Item>
+            </div>
+
+            <div className="product-purchase-card">
+              <div className="price-section">
+                <span className="price-label">Price:</span>
+                <span className="price-amount">${product.price}</span>
+              </div>
+
+              <div className="stock-section">
+                <span className="stock-label">Status:</span>
+                {product.countInStock > 0 ? (
+                  <Badge bg="success" className="stock-badge">
+                    In Stock
+                  </Badge>
+                ) : (
+                  <Badge bg="danger" className="stock-badge">
+                    Out of Stock
+                  </Badge>
                 )}
-              </ListGroup>
-            </Card.Body>
-          </Card>
+              </div>
+
+              {product.countInStock > 0 && (
+                <div className="action-section">
+                  <Button 
+                    onClick={addToCartHandler}
+                    className="add-to-cart-btn"
+                  >
+                    <i className="fas fa-cart-plus"></i>
+                    Add to Cart
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
         </Col>
       </Row>
     </div>
